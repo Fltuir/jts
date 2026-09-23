@@ -1,27 +1,29 @@
+import time
 import ts3
 
-# اطلاعات اتصال به سرور تیم‌اسپیک شما
 HOST = "46.38.138.68"
-PORT = 7283  # پورت کوئری شما
+PORT = 7283
 USER = "jts3"
 PASS = "ekBgRh5LZtmV"
 
-print(f"در حال تلاش برای اتصال به {HOST}:{PORT} با نام کاربری {USER}...")
+print("Starting TeamSpeak 3 Bot Test...", flush=True)
 
 try:
-    # ایجاد اتصال به سرورکوئری
-    with ts3.query.TS3Connection(HOST, PORT) as ts3conn:
-        # لاگین با اطلاعات کوئری
+    print(f"Connecting to {HOST}:{PORT}...", flush=True)
+    # ایجاد اتصال با در نظر گرفتن تایم‌اوت
+    with ts3.query.TS3Connection(HOST, PORT, timeout=10) as ts3conn:
+        print("Connected! Attempting login...", flush=True)
         ts3conn.login(client_login_name=USER, client_login_password=PASS)
-        print("اتصال موفقیت‌آمیز بود! ربات به راحتی توانست به سرور لاگین کند.")
+        print("Login successful! Bot is authenticated.", flush=True)
         
-        # انتخاب مجازی سرور (آیدی 1 یا پیش‌فرض)
         ts3conn.use(sid=1)
-        
-        # دریافت اطلاعات پایه سرور برای تست
         resp = ts3conn.hostinfo()
         server_name = resp[0].get("virtualserver_name", "نامشخص")
-        print(f"نام سرور تیم‌اسپیک شما: {server_name}")
+        print(f"Successfully connected to Virtual Server: {server_name}", flush=True)
 
 except Exception as e:
-    print(f"خطا در اتصال به سرورکوئری: {e}")
+    print(f"Connection failed with error: {e}", flush=True)
+
+# نگه داشتن کانتینر برای بررسی لاگ‌ها
+while True:
+    time.sleep(60)
